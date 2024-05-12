@@ -4,6 +4,7 @@ import io.github.demo.demoservice.service.UserService;
 import io.github.demo.demoservice.vo.User;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.skywalking.apm.toolkit.trace.Trace;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,23 +13,41 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.reactive.function.client.WebClient;
 
 @RestController
-@RequestMapping(path = "/api/user")
+@RequestMapping(path = "/user/api/user")
 @Slf4j
 public class UserController {
-  private UserService userService;
 
-  public UserController(UserService userService) {
+  private UserService userService;
+  private WebClient webClient;
+
+  //private final WebClient webClient;
+  //
+  //    public CameraService(WebClient.Builder webClientBuilder,
+  //                         @Value("${therapconnect.admin.altumview-query-service-api.base-url}") final String cameraApiBaseUrl) {
+  //        this.webClient = webClientBuilder.baseUrl(cameraApiBaseUrl)
+  //                .build();
+  //    }
+
+  public UserController(UserService userService, WebClient.Builder webClientBuilder) {
     this.userService = userService;
+    this.webClient = webClientBuilder.baseUrl("http://auth-service").build();
   }
 
+//  @Trace
   @GetMapping
   public List<User> getAll() {
     log.info("Hello");
+    String response = webClient.get().uri("/auth/check").retrieve().bodyToMono(String.class).block();
+    log.info("=====================");
+    log.info(response);
+    log.info("=================");
     return userService.getAll();
   }
 
+  @Trace
   @PostMapping
   public User createUser(@RequestBody User user) {
     return userService.createUser(user);

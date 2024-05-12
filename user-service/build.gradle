@@ -1,7 +1,12 @@
 plugins {
-	id 'org.springframework.boot' version '2.1.6.RELEASE'
+	id 'org.springframework.boot' version '3.2.2'
+	id 'io.spring.dependency-management' version '1.1.4'
 	id 'com.diffplug.gradle.spotless' version "3.23.0"
 	id 'java'
+}
+
+ext {
+	set('springCloudVersion', "2023.0.0")
 }
 
 apply plugin: 'io.spring.dependency-management'
@@ -16,16 +21,24 @@ repositories {
 	mavenCentral()
 }
 
-spotless {
-	java {
-		googleJavaFormat()
-		removeUnusedImports()
-		endWithNewline()
-	}
-}
+//spotless {
+//	java {
+//		googleJavaFormat()
+//		removeUnusedImports()
+//		endWithNewline()
+//	}
+//}
 
 bootRun {
 	jvmArgs = ["-Dskywalking.agent.service_name=user-service", "-javaagent:$rootDir/skywalking-agent/skywalking-agent.jar"]
+}
+
+bootJar {
+	enabled = false
+}
+
+jar {
+	enabled = true
 }
 
 dependencies {
@@ -34,12 +47,28 @@ dependencies {
 	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.flywaydb:flyway-core'
-	implementation 'org.apache.skywalking:apm-toolkit-trace:9.1.0'
-	implementation 'org.apache.skywalking:apm-toolkit-logback-1.x:9.1.0'
-	compileOnly 'org.projectlombok:lombok:1.18.30'
+	implementation 'org.apache.skywalking:apm-toolkit-trace:9.2.0'
+	implementation 'org.apache.skywalking:apm-toolkit-logback-1.x:9.2.0'
+	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.h2database:h2'
-	annotationProcessor 'org.projectlombok:lombok:1.18.30'
+	implementation "org.springframework.boot:spring-boot-starter-webflux"
+
+	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	// https://mvnrepository.com/artifact/org.apache.skywalking/apm-toolkit-micrometer-registry
+	implementation group: 'org.apache.skywalking', name: 'apm-toolkit-micrometer-registry', version: '9.2.0'
+	runtimeOnly "io.micrometer:micrometer-tracing-bridge-brave"
+	implementation "io.zipkin.reporter2:zipkin-reporter-brave"
+
+	// https://mvnrepository.com/artifact/io.micrometer/micrometer-core
+	implementation group: 'io.micrometer', name: 'micrometer-core', version: '1.12.5'
+
+
+
+
+//	implementation 'org.apache.skywalking:apm-toolkit-logback-1.x:9.1.0'
+
+	implementation "org.springframework.cloud:spring-cloud-starter-consul-discovery"
 }
 
 dependencyManagement {

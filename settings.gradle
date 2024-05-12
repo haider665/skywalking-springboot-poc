@@ -4,4 +4,4 @@ pluginManagement {
 	}
 }
 rootProject.name = 'skywalking-demo'
-include 'zull-gateway', "user-service"
+include 'zull-gateway', "user-service", "auth-service"
