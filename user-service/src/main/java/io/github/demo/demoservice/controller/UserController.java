@@ -5,6 +5,7 @@ import io.github.demo.demoservice.vo.User;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.skywalking.apm.toolkit.trace.Trace;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,6 +23,7 @@ public class UserController {
 
   private UserService userService;
   private WebClient webClient;
+  private RabbitTemplate rabbitTemplate;
 
   //private final WebClient webClient;
   //
@@ -31,8 +33,9 @@ public class UserController {
   //                .build();
   //    }
 
-  public UserController(UserService userService, WebClient.Builder webClientBuilder) {
+  public UserController(UserService userService, WebClient.Builder webClientBuilder, RabbitTemplate rabbitTemplate) {
     this.userService = userService;
+    this.rabbitTemplate = rabbitTemplate;
     this.webClient = webClientBuilder.baseUrl("http://auth-service").build();
   }
 
@@ -43,6 +46,7 @@ public class UserController {
     String response = webClient.get().uri("/auth/check").retrieve().bodyToMono(String.class).block();
     log.info("=====================");
     log.info(response);
+    rabbitTemplate.convertAndSend("test-exchange", "test-routing-key", response);
     log.info("=================");
     return userService.getAll();
   }

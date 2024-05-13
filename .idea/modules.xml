@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/auth-service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/auth-service.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/auth-service/skywalking-demo.auth-service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/auth-service/skywalking-demo.auth-service.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/user-service/skywalking-demo.user-service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/user-service/skywalking-demo.user-service.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/zull-gateway/skywalking-demo.zull-gateway.main.iml" filepath="$PROJECT_DIR$/.idea/modules/zull-gateway/skywalking-demo.zull-gateway.main.iml" />
