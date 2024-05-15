@@ -25,8 +25,17 @@ public class AuthController {
     }
 
 //    @Trace
-    @GetMapping("/health")
-    public ResponseEntity<String> health() {
-        return new ResponseEntity<>("healthy", HttpStatus.OK);
+    @GetMapping("/late")
+    public ResponseEntity<String> lateResponse() throws InterruptedException {
+        Thread.sleep(5000);
+        return new ResponseEntity<>("late", HttpStatus.OK);
+    }
+
+    //    @Trace
+    @GetMapping("/error")
+    public ResponseEntity<String> error() {
+        log.info("Error in auth service");
+        throw new RuntimeException();
+//        return new ResponseEntity<>("success", HttpStatus.OK);
     }
 }
